@@ -1,0 +1,6 @@
+projectKey=sonarQubeTest
+serverUrl=http://localhost:9000
+serverVersion=26.9.0.129388
+dashboardUrl=http://localhost:9000/dashboard?id=sonarQubeTest
+ceTaskId=3f3acadf-94bf-4d85-acbe-7d70fa457bdd
+ceTaskUrl=http://localhost:9000/api/ce/task?id=3f3acadf-94bf-4d85-acbe-7d70fa457bdd
