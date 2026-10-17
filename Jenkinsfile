@@ -21,7 +21,7 @@ pipeline {
                     snykInstallation: 'Snyk-Latest',
                     snykTokenId: 'SNYK-TOKEN',
                     severity: 'high',
-                    failOnIssues: false,
+                    failOnIssues: true,
                     monitorProjectOnBuild: true
                 )
             }
