@@ -15,22 +15,45 @@ pipeline {
             }
         }
 
-        stage('Snyk Security Scan') {
+        stage('Test') {
             steps {
-                snykSecurity(
-                    snykInstallation: 'Snyk-Latest',
-                    snykTokenId: 'SNYK-TOKEN',
-                    severity: 'high',
-                    failOnIssues: true,
-                    monitorProjectOnBuild: true
-                )
+                sh './mvnw test'
             }
         }
     }
 
     post {
-        always {
-            echo 'Pipeline finished.'
+        started {
+            slackSend(
+                channel: '#jenkins-builds',
+                tokenCredentialId: 'slack-token',
+                color: '#439FE0',
+                message: "STARTED: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+            )
+        }
+        success {
+            slackSend(
+                channel: '#jenkins-builds',
+                tokenCredentialId: 'slack-token',
+                color: 'good',
+                message: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+            )
+        }
+        unstable {
+            slackSend(
+                channel: '#jenkins-builds',
+                tokenCredentialId: 'slack-token',
+                color: 'warning',
+                message: "UNSTABLE: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+            )
+        }
+        failure {
+            slackSend(
+                channel: '#jenkins-builds',
+                tokenCredentialId: 'slack-token',
+                color: 'danger',
+                message: "FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+            )
         }
     }
 }
