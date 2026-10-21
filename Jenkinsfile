@@ -6,7 +6,7 @@ pipeline {
             steps {
                 slackSend(
                     channel: '#jenkins-builds',
-                    tokenCredentialId: 'slack-token',
+                    tokenCredentialId: 'SLACK-TOKEN',
                     color: '#439FE0',
                     message: "STARTED: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
                 )
@@ -37,7 +37,7 @@ pipeline {
         success {
             slackSend(
                 channel: '#jenkins-builds',
-                tokenCredentialId: 'slack-token',
+                tokenCredentialId: 'SLACK-TOKEN',
                 color: 'good',
                 message: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
             )
@@ -45,7 +45,7 @@ pipeline {
         unstable {
             slackSend(
                 channel: '#jenkins-builds',
-                tokenCredentialId: 'slack-token',
+                tokenCredentialId: 'SLACK-TOKEN',
                 color: 'warning',
                 message: "UNSTABLE: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
             )
@@ -53,7 +53,7 @@ pipeline {
         failure {
             slackSend(
                 channel: '#jenkins-builds',
-                tokenCredentialId: 'slack-token',
+                tokenCredentialId: 'SLACK-TOKEN',
                 color: 'danger',
                 message: "FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
             )
