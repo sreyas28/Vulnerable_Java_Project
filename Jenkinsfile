@@ -2,17 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Notify Start') {
-            steps {
-                slackSend(
-                    channel: '#jenkins-builds',
-                    tokenCredentialId: 'SLACK-TOKEN',
-                    color: '#439FE0',
-                    message: "STARTED: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
-                )
-            }
-        }
-
         stage('Checkout') {
             steps {
                 checkout scm
@@ -26,37 +15,24 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Upload to Nexus') {
             steps {
-                sh './mvnw test'
+                withCredentials([usernamePassword(
+                        credentialsId: 'nexus-creds',
+                        usernameVariable: 'NEXUS_USER',
+                        passwordVariable: 'NEXUS_PASS')]) {
+                    sh './mvnw deploy -s settings.xml -DskipTests'
+                }
             }
         }
     }
 
     post {
         success {
-            slackSend(
-                channel: '#jenkins-builds',
-                tokenCredentialId: 'SLACK-TOKEN',
-                color: 'good',
-                message: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
-            )
-        }
-        unstable {
-            slackSend(
-                channel: '#jenkins-builds',
-                tokenCredentialId: 'SLACK-TOKEN',
-                color: 'warning',
-                message: "UNSTABLE: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
-            )
+            echo 'Artifact uploaded to Nexus successfully.'
         }
         failure {
-            slackSend(
-                channel: '#jenkins-builds',
-                tokenCredentialId: 'SLACK-TOKEN',
-                color: 'danger',
-                message: "FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
-            )
+            echo 'Pipeline failed. Check the console output.'
         }
     }
 }

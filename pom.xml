@@ -16,6 +16,17 @@
     <version>1.0.0-SNAPSHOT</version>
     <name>vulnapp</name>
     <description>Intentionally vulnerable app for security training and scanner benchmarking</description>
+    
+    <distributionManagement>
+       <snapshotRepository>
+            <id>nexus</id>
+            <url>http://localhost:8081/repository/vulnapp-snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus</id>
+            <url>http://localhost:8081/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
 
     <properties>
         <java.version>17</java.version>
